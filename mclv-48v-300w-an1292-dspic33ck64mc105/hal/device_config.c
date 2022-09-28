@@ -9,7 +9,7 @@
 	to select oscillators, communication channels and resets.
 
   Description:
-    Definitions in the file are for dsPIC33CK256MP508.
+    Definitions in the file are for dsPIC33CK64MC105.
 *******************************************************************************/
 /*******************************************************************************
 * Copyright (c) 2019 released Microchip Technology Inc.  All rights reserved.

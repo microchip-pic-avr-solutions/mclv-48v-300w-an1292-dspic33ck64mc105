@@ -10,7 +10,7 @@
     pins
 
   Description:
-    Definitions in the file are for dsPIC33CK256MP508 on Motor Control 
+    Definitions in the file are for dsPIC33CK64MC105 on Motor Control 
     Development board from Microchip
 
 *******************************************************************************/
