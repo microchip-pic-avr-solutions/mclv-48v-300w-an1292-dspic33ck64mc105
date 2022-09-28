@@ -89,7 +89,7 @@ controllers, tuning mode will disable the speed PI controller */
 /* The following values are given in the xls attached file */
     
     
-/*Update the following motor tuning parameters while using LVMC build configuration*/
+/*Update the following motor tuning parameters while using MCLV48V-300W build configuration*/
     
 /* Motor's number of pole pairs */
 #define NOPOLESPAIRS 5

@@ -154,7 +154,7 @@ int main ( void )
                 }
 
             }
-            // Monitoring for Button 2 press in LVMC
+            // Monitoring for Button 2 press in MCLV48V-300W
             if (IsPressed_Button2())
             {
                 if ((uGF.bits.RunMotor == 1) && (uGF.bits.OpenLoop == 0))
@@ -456,7 +456,7 @@ void DoControl( void )
                                        &piOutputIq.out);
         vdq.q = piOutputIq.out;
     }
-      
+    
 }
 // *****************************************************************************
 /* Function:
@@ -621,7 +621,7 @@ void __attribute__((__interrupt__,no_auto_psv)) _ADCInterrupt()
         measureInputs.potValue = (int16_t)( ADCBUF_SPEED_REF_A>>1);
         measureInputs.dcBusVoltage = (int16_t)( ADCBUF_VBUS_A>>1);
         
-        MCAPP_MeasureTemperature(&measureInputs,(int16_t)(ADCBUF_MOSFET_TEMP_A>>1));
+//        MCAPP_MeasureTemperature(&measureInputs,(int16_t)(ADCBUF_MOSFET_TEMP_A>>1));
         
         DiagnosticsStepIsr();
     }
