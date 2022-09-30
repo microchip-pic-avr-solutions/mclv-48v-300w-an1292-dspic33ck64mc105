@@ -10,7 +10,7 @@
     pins
 
   Description:
-    Definitions in the file are for dsPIC33CK256MP508 on Motor Control 
+    Definitions in the file are for dsPIC33CK64MC105 on Motor Control 
     Development board from Microchip
 
 *******************************************************************************/
@@ -65,22 +65,22 @@
 // Digital I/O definitions
 // Push button Switches
     
-// SW1 :  (RE10)
-#define SW1                   PORTEbits.RE10
-// SW2 :  (RE11)
-#define SW2                   PORTEbits.RE11
+// SW1 :  (RC10)
+#define SW1                   PORTCbits.RC10
+// SW2 :  (RD13)
+#define SW2                   PORTDbits.RD13
         
 // S2 : PIM #34 - Used as START/STOP button of Motor
-#define BUTTON_START_STOP        SW1
+#define BUTTON_START_STOP             SW1
 // S3 : PIM #36 - Used as Speed HALF/DOUBLE button of Motor
 #define BUTTON_SPEED_HALF_DOUBLE      SW2
 
 
 // Debug LEDs
 // LED2 : 
-#define LED2                    LATEbits.LATE13
+#define LED2                    LATCbits.LATC7
 // LED1 : 
-#define LED1                    LATEbits.LATE12
+#define LED1                    LATDbits.LATD10
 
 
 // *****************************************************************************
