@@ -216,11 +216,11 @@ void MapGPIOHWFunction(void)
     // Potentiometer #1 input - used as Speed Reference
     // POT1 
     ANSELBbits.ANSELB9= 1;
-    TRISBbits.TRISB9 = 1;   //Pin 37: PGC1/AN11/RP41/SDA1/RB9
-
+    TRISBbits.TRISB9 = 1;   // PIN37: PGC1/AN11/RP41/SDA1/RB9
+    
     /*DC Bus Voltage Signals*/
     ANSELBbits.ANSELB8 = 1;
-    TRISBbits.TRISB8 = 1;   //Pin 36: PGD1/AN10/RP40/SCL1/RB8
+    TRISBbits.TRISB8 = 1;   //PIN36 : PGD1/AN10/RP40/SCL1/RB8 
 
     /* Digital SIGNALS */   
     // DIGITAL INPUT/OUTPUT PINS
@@ -240,24 +240,24 @@ void MapGPIOHWFunction(void)
     TRISBbits.TRISB11 = 0 ;         
     
     // Debug LEDs
-    // LED2 : 
-    TRISCbits.TRISC7 = 0;            // Pin 24 - ISRC2/RP55/RC7
     // LED1 : 
-    TRISDbits.TRISD10 = 0;           // Pin 23 - ISRC3/RP74/RD10
+    TRISDbits.TRISD10 = 0;           // PIN:23 - ISRC3/RP74/RD10
+    // LED2 : 
+    TRISCbits.TRISC7 = 0;           // PIN:24 - ISRC2/RP55/RC7
 
     // Push button Switches  
     // SW1 : 
-    TRISCbits.TRISC10 = 1;           // Pin 40 - RP58/RC10
+    TRISCbits.TRISC10 = 1;           // PIN:40 - RP58/RC10
     // SW2 : 
-    TRISDbits.TRISD13 = 1;           // Pin 6  - ANN0/RP77/RD13
+    TRISDbits.TRISD13 = 1;           // PIN:06 - ANN0/RP77/RD13
     
     //Configuring RP72 as PCI9 input for FLTLAT_OC_OV
 	_PCI9R = 72;
 	/** Diagnostic Interface for MCLV48V-300W Board etc.
         Re-map UART Channels to the device pins connected to the following 
         PIM pins on the Motor Control Development Boards .
-        UART_RX : Pin 4 - RP61/RC13 (Input)
-        UART_TX : Pin 3 - RP60/RC12 (Output)   */
+        UART_RX : PIN #4 - RP61/RC13 (Input)
+        UART_TX : PIN #3 - RP60/RC12(Output)   */
     _U1RXR = 61;
     _RP60R = 0b000001;
     

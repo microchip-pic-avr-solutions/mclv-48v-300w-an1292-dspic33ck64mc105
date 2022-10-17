@@ -86,7 +86,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="dsPIC33CK-MC_DFP" vendor="Microchip" version="1.4.92"/>
+        <pack name="dsPIC33CK-MC_DFP" vendor="Microchip" version="1.5.126"/>
       </packs>
       <ScriptingSettings>
       </ScriptingSettings>
@@ -607,8 +607,6 @@
                   value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-2beff"/>
-        <property key="programmerToGoFilePath"
-                  value="D:/SourceTree-PCLink/mclv-48v-300w-an1292-dspic33ck64mc105/mclv-48v-300w-an1292-dspic33ck64mc105/pmsm.X/debug/default/pmsm_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.pgmentry.voltage" value="low"/>
