@@ -13,7 +13,6 @@
         <itemPath>../hal/pwm.h</itemPath>
         <itemPath>../hal/uart1.h</itemPath>
         <itemPath>../hal/measure.h</itemPath>
-        <itemPath>../hal/cmp.h</itemPath>
       </logicalFolder>
       <logicalFolder name="library" displayName="library" projectFiles="true">
         <logicalFolder name="mc-library" displayName="motor" projectFiles="true">
@@ -54,7 +53,6 @@
         <itemPath>../hal/pwm.c</itemPath>
         <itemPath>../hal/uart1.c</itemPath>
         <itemPath>../hal/measure.c</itemPath>
-        <itemPath>../hal/cmp.c</itemPath>
         <itemPath>../hal/device_config.c</itemPath>
       </logicalFolder>
       <itemPath>../estim.c</itemPath>

@@ -155,13 +155,18 @@ void InitializeADCs (void)
        0 = Channel output data is unsigned    */
     /*ADMOD0L configures Output Data Sign for Analog inputs  AN0 to AN7 */
     ADMOD0L = 0x0000;
+    /*Ia*/
     ADMOD0Lbits.SIGN0 = 1;
+    /*Ib*/
     ADMOD0Lbits.SIGN1 = 1;
+    /*Ibus*/
     ADMOD0Lbits.SIGN4 = 1;
    
     /*ADMOD0H configures Output Data Sign for Analog inputs  AN8 to AN15 */
-    ADMOD0H = 0;   
+    ADMOD0H = 0x0000;
+	/*Vbus*/
     ADMOD0Hbits.SIGN10 = 0;
+	/*POT*/
     ADMOD0Hbits.SIGN11 = 0;
     ADMOD1L = 0x0000;
 
@@ -247,17 +252,17 @@ void InitializeADCs (void)
     
 
 #ifdef SINGLE_SHUNT
-    /* Trigger Source for Analog Input #4  = 0b0101 */
+    /* Trigger Source for Analog Input #4  = 0b0101 for Ibus */
     ADTRIG1Lbits.TRGSRC4 = 0x5;  
 #else
-    /* Trigger Source for Analog Input #0  = 0b0100 */
+    /* Trigger Source for Analog Input #0  = 0b0100 for Ia */
     ADTRIG0Lbits.TRGSRC0 = 0x4;
-    /* Trigger Source for Analog Input #1  = 0b0100 */
+    /* Trigger Source for Analog Input #1  = 0b0100 for Ib */
     ADTRIG0Lbits.TRGSRC1 = 0x4;
 
 #endif
-    /* Trigger Source for Analog Input #10  = 0b0100 */
+    /* Trigger Source for Analog Input #10  = 0b0100 for Vbus */
     ADTRIG2Hbits.TRGSRC10 = 0x4;
-    /* Trigger Source for Analog Input #11  = 0b0100 */
+    /* Trigger Source for Analog Input #11  = 0b0100 for POT*/
     ADTRIG2Hbits.TRGSRC11 = 0x4;
 }

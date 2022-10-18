@@ -1,75 +1,99 @@
+// <editor-fold defaultstate="collapsed" desc="Description/Instruction ">
+/**
+ * @file singleshunt.c
+ *
+ * @brief This module implements Single Shunt Reconstruction Algorithm
+ *
+ * Component: Single Shunt 
+ *
+ */
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Disclaimer ">
 
 /*******************************************************************************
- * Copyright (c) 2017 released Microchip Technology Inc.  All rights reserved.
- *
- * SOFTWARE LICENSE AGREEMENT:
- *
- * Microchip Technology Incorporated ("Microchip") retains all ownership and
- * intellectual property rights in the code accompanying this message and in all
- * derivatives hereto.  You may use this code, and any derivatives created by
- * any person or entity by or on your behalf, exclusively with Microchip's
- * proprietary products.  Your acceptance and/or use of this code constitutes
- * agreement to the terms and conditions of this notice.
- *
- * CODE ACCOMPANYING THIS MESSAGE IS SUPPLIED BY MICROCHIP "AS IS".  NO
- * WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
- * TO, IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS FOR A
- * PARTICULAR PURPOSE APPLY TO THIS CODE, ITS INTERACTION WITH MICROCHIP'S
- * PRODUCTS, COMBINATION WITH ANY OTHER PRODUCTS, OR USE IN ANY APPLICATION.
- *
- * YOU ACKNOWLEDGE AND AGREE THAT, IN NO EVENT, SHALL MICROCHIP BE LIABLE,
- * WHETHER IN CONTRACT, WARRANTY, TORT (INCLUDING NEGLIGENCE OR BREACH OF
- * STATUTORY DUTY),STRICT LIABILITY, INDEMNITY, CONTRIBUTION, OR OTHERWISE,
- * FOR ANY INDIRECT, SPECIAL,PUNITIVE, EXEMPLARY, INCIDENTAL OR CONSEQUENTIAL
- * LOSS, DAMAGE, FOR COST OR EXPENSE OF ANY KIND WHATSOEVER RELATED TO THE CODE,
- * HOWSOEVER CAUSED, EVEN IF MICROCHIP HAS BEEN ADVISED OF THE POSSIBILITY OR
- * THE DAMAGES ARE FORESEEABLE.  TO THE FULLEST EXTENT ALLOWABLE BY LAW,
- * MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN ANY WAY RELATED TO THIS CODE,
- * SHALL NOT EXCEED THE PRICE YOU PAID DIRECTLY TO MICROCHIP SPECIFICALLY TO
- * HAVE THIS CODE DEVELOPED.
- *
- * You agree that you are solely responsible for testing the code and
- * determining its suitability.  Microchip has no obligation to modify, test,
- * certify, or support the code.
- *
- *******************************************************************************/
-#include <libq.h>
-#include "userparms.h"
+* Copyright (c) 2017 released Microchip Technology Inc.  All rights reserved.
+*
+* SOFTWARE LICENSE AGREEMENT:
+*
+* Microchip Technology Incorporated ("Microchip") retains all ownership and
+* intellectual property rights in the code accompanying this message and in all
+* derivatives hereto.  You may use this code, and any derivatives created by
+* any person or entity by or on your behalf, exclusively with Microchip's
+* proprietary products.  Your acceptance and/or use of this code constitutes
+* agreement to the terms and conditions of this notice.
+*
+* CODE ACCOMPANYING THIS MESSAGE IS SUPPLIED BY MICROCHIP "AS IS".  NO
+* WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED
+* TO, IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS FOR A
+* PARTICULAR PURPOSE APPLY TO THIS CODE, ITS INTERACTION WITH MICROCHIP'S
+* PRODUCTS, COMBINATION WITH ANY OTHER PRODUCTS, OR USE IN ANY APPLICATION.
+*
+* YOU ACKNOWLEDGE AND AGREE THAT, IN NO EVENT, SHALL MICROCHIP BE LIABLE,
+* WHETHER IN CONTRACT, WARRANTY, TORT (INCLUDING NEGLIGENCE OR BREACH OF
+* STATUTORY DUTY),STRICT LIABILITY, INDEMNITY, CONTRIBUTION, OR OTHERWISE,
+* FOR ANY INDIRECT, SPECIAL,PUNITIVE, EXEMPLARY, INCIDENTAL OR CONSEQUENTIAL
+* LOSS, DAMAGE, FOR COST OR EXPENSE OF ANY KIND WHATSOEVER RELATED TO THE CODE,
+* HOWSOEVER CAUSED, EVEN IF MICROCHIP HAS BEEN ADVISED OF THE POSSIBILITY OR
+* THE DAMAGES ARE FORESEEABLE.  TO THE FULLEST EXTENT ALLOWABLE BY LAW,
+* MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN ANY WAY RELATED TO THIS CODE,
+* SHALL NOT EXCEED THE PRICE YOU PAID DIRECTLY TO MICROCHIP SPECIFICALLY TO
+* HAVE THIS CODE DEVELOPED.
+*
+* You agree that you are solely responsible for testing the code and
+* determining its suitability.  Microchip has no obligation to modify, test,
+* certify, or support the code.
+*
+*******************************************************************************/
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="HEADER FILES ">
+
+#include <stdint.h>
+#include <stdbool.h>
+
+#include <xc.h>
+#include "pwm.h"
 #include "singleshunt.h"
 
+// </editor-fold>
+
+// <editor-fold defaultstate="expanded" desc="VARIABLES ">   
 
 SINGLE_SHUNT_PARM_T singleShuntParam;
-inline static void SingleShunt_CalculateSwitchingTime(SINGLE_SHUNT_PARM_T *,uint16_t );
 
-// *****************************************************************************
+// </editor-fold>
 
-/* Function:
-    CalcSVGen_ss ()
+// <editor-fold defaultstate="expanded" desc="INTERFACE FUNCTIONS ">
 
-  Summary:
- Space Vector modulation generation from Va,Vb,Vc
+void SingleShunt_InitializeParameters(SINGLE_SHUNT_PARM_T *pSingleShunt);
+inline static void SingleShunt_CalculateSwitchingTime(SINGLE_SHUNT_PARM_T *,
+                                                                    uint16_t );
+uint16_t SingleShunt_CalculateSpaceVectorPhaseShifted(MC_ABC_T *abc,
+                                    uint16_t iPwmPeriod,
+                                    SINGLE_SHUNT_PARM_T *pSingleShunt);
+void SingleShunt_PhaseCurrentReconstruction(SINGLE_SHUNT_PARM_T *pSingleShunt);
+void ResetSingleShuntSamplePoint(SINGLE_SHUNT_PARM_T *pSingleShunt);
 
-  Description:
-    Space Vector modulation generation from Va,Vb,Vc
+// </editor-fold>
 
-  Precondition:
-    None.
-
-  Parameters:
-    None
-
-  Returns:
-    None.
-
-  Remarks:
-    None.
- */
+/**
+* <B> Function: void SingleShunt_InitializeParameters(SINGLE_SHUNT_PARM_T *)</B>
+*
+* @brief Function to initialize variables in Single Shunt structure.
+*
+* @param Pointer to the data structure containing Single Shunt parameters.
+* @return none.
+* @example
+* <CODE> SingleShunt_InitializeParameters(&singleShunt); </CODE>
+*
+*/
 void SingleShunt_InitializeParameters(SINGLE_SHUNT_PARM_T *pSingleShunt)
-{    
+{
     /* Set minimum window time to measure current through single shunt */
 	pSingleShunt->tcrit = SSTCRIT;
     /* Set delay due to dead time and slew rate etc.*/
-	pSingleShunt->tDelaySample = SS_SAMPLE_DELAY;	
+	pSingleShunt->tDelaySample = SS_SAMPLE_DELAY;
     /*Trigger  values of Bus Current Samples made equal to zero */
     pSingleShunt->trigger1 = 0;
     pSingleShunt->trigger2 = 0;
@@ -78,34 +102,26 @@ void SingleShunt_InitializeParameters(SINGLE_SHUNT_PARM_T *pSingleShunt)
     pSingleShunt->Ibus2 = 0;
     pSingleShunt->adcSamplePoint = 0;
 }
-// *****************************************************************************
-
-/* Function:
-    CalcSVGen_ss ()
-
-  Summary:
- Space Vector modulation generation from Va,Vb,Vc
-
-  Description:
-    Space Vector modulation generation from Va,Vb,Vc
-
-  Precondition:
-    None.
-
-  Parameters:
-    None
-
-  Returns:
-    None.
-
-  Remarks:
-    None.
- */
+/**
+* <B> Function: void SingleShunt_CalculateSpaceVectorPhaseShifted(MC_ABC_T *,
+*                                           uint16_t,SINGLE_SHUNT_PARM_T *) </B>
+*
+* @brief Function to calculate Va,Vb and Vc.
+*
+* @param Pointer to the data structure containing Va,Vb & Vc
+* @param PWM Period
+* @param Pointer to the data structure containing Single Shunt parameters.
+* @return 1.
+* @example
+* <CODE> SingleShunt_CalculateSpaceVectorPhaseShifted(&abc,
+*                                              pwmPeriod,&singleShunt); </CODE>
+*
+*/
 uint16_t SingleShunt_CalculateSpaceVectorPhaseShifted(MC_ABC_T *abc,
                                     uint16_t iPwmPeriod,
                                     SINGLE_SHUNT_PARM_T *pSingleShunt)
-{ 
-    uint16_t mcCorconSave = CORCON;
+{
+    asm volatile("push  CORCON");
     CORCON = 0x00E2;
     
     MC_DUTYCYCLEOUT_T *pdcout1 = &pSingleShunt->pwmDutycycle1;
@@ -218,38 +234,29 @@ uint16_t SingleShunt_CalculateSpaceVectorPhaseShifted(MC_ABC_T *abc,
         so a valid measurement is done using a single shunt resistor.
         tDelaySample is added as a delay so no erroneous measurement is taken*/
 	
-    pSingleShunt->trigger1 = (iPwmPeriod + pSingleShunt->tDelaySample);
+    pSingleShunt->trigger1 = (MPER + pSingleShunt->tDelaySample);
     pSingleShunt->trigger1 = pSingleShunt->trigger1 - ((pSingleShunt->Ta1 + pSingleShunt->Tb1) >> 1) ;
-    pSingleShunt->trigger2 = (iPwmPeriod +  pSingleShunt->tDelaySample);
+    pSingleShunt->trigger2 = (MPER +  pSingleShunt->tDelaySample);
     pSingleShunt->trigger2 = pSingleShunt->trigger2 - ((pSingleShunt->Tb1 + pSingleShunt->Tc1) >> 1) ;
 	INVERTERA_PWM_TRIGB = singleShuntParam.trigger1;
     INVERTERA_PWM_TRIGC = singleShuntParam.trigger2;
-    CORCON = mcCorconSave;
+    asm volatile("pop  CORCON");
     return(1);
 }
-// *****************************************************************************
-
-/* Function:
-    CalcTimes_ss_Inline ()
-
-  Summary:
- Duty cycle calcuation from T1 and T2 
-
-  Description:
-    Duty cycle calcuation from T1 and T2
-
-  Precondition:
-    None.
-
-  Parameters:
-    None
-
-  Returns:
-    None.
-
-  Remarks:
-    None.
- */
+/**
+* <B> Function: void SingleShunt_CalculateSwitchingTime(SINGLE_SHUNT_PARM_T *,
+*                                                                 uint16_t) </B>
+*
+* @brief Function to calculate SVM T1,T2 and T0.
+*
+* @param Pointer to the data structure containing Single Shunt parameters.
+* @param PWM Period
+* @return none.
+* @example
+* <CODE> SingleShunt_CalculateSpaceVectorPhaseShifted(&singleShunt,
+*                                                           pwmPeriod); </CODE>
+*
+*/
 inline static void SingleShunt_CalculateSwitchingTime(SINGLE_SHUNT_PARM_T *pSingleShunt,
         uint16_t iPwmPeriod)
 {
@@ -271,8 +278,8 @@ inline static void SingleShunt_CalculateSwitchingTime(SINGLE_SHUNT_PARM_T *pSing
         starts counting down. Modification to pattern is done here if times
         T1 or T2 are lesser than tcrit. Change in duty cycle will take effect
         until PWM timer starts counting down.
-	
-	
+
+
      If T1 is greater than the minimum measurement window tcrit,
      then no modification to the pattern is needed.*/
     if (pSingleShunt->T1 > pSingleShunt->tcrit)
@@ -309,31 +316,19 @@ inline static void SingleShunt_CalculateSwitchingTime(SINGLE_SHUNT_PARM_T *pSing
         pSingleShunt->Ta1 = pSingleShunt->Tb1 + pSingleShunt->tcrit;
         pSingleShunt->Ta2 = pSingleShunt->Tb2 + pSingleShunt->T2 + pSingleShunt->T2 - pSingleShunt->tcrit;
     }
-	
-}    
-// *****************************************************************************
 
-/* Function:
-    PhaseCurrent_Reconstruction ()
-
-  Summary:
- Phase Currents reconstruction from bus current
-
-  Description:
-    Phase Currents reconstruction from bus current
-
-  Precondition:
-    None.
-
-  Parameters:
-    None
-
-  Returns:
-    None.
-
-  Remarks:
-    None.
- */
+}
+/**
+* <B> Function: void SingleShunt_PhaseCurrentReconstruction(SINGLE_SHUNT_PARM_T *)</B>
+*
+* @brief Function to reconstruct phase currents from bus current samples.
+*
+* @param Pointer to the data structure containing Single Shunt parameters.
+* @return none.
+* @example
+* <CODE> SingleShunt_PhaseCurrentReconstruction(&singleShunt); </CODE>
+*
+*/
 void SingleShunt_PhaseCurrentReconstruction(SINGLE_SHUNT_PARM_T *pSingleShunt)
 {
     switch(pSingleShunt->sectorSVM)
@@ -367,6 +362,28 @@ void SingleShunt_PhaseCurrentReconstruction(SINGLE_SHUNT_PARM_T *pSingleShunt)
             pSingleShunt->Ic = pSingleShunt->Ibus1; 
             pSingleShunt->Ib = -pSingleShunt->Ibus2;
             pSingleShunt->Ia = -pSingleShunt->Ic - pSingleShunt->Ib;
-        break;   
+        break;
+        default:
+            pSingleShunt->Ic = 0; 
+            pSingleShunt->Ib = 0;
+            pSingleShunt->Ia = 0;
+        break;
+    }
+}
+/**
+* <B> Function: void ResetSingleShuntSamplePoint(void)</B>
+*
+* @brief Function to reset ADC sampling point to zero.
+* @param Pointer to the data structure containing Single Shunt parameters.
+* @return none.
+* @example
+* <CODE> ResetSingleShuntSamplePoint(); </CODE>
+*
+*/
+void ResetSingleShuntSamplePoint(SINGLE_SHUNT_PARM_T *pSingleShunt)
+{
+    if((PG1STATbits.CAHALF ==1) && (pSingleShunt->adcSamplePoint == 1))
+    {
+        pSingleShunt->adcSamplePoint = 0;
     }  
 }

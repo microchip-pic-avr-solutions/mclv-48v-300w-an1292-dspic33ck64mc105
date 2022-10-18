@@ -39,7 +39,6 @@
 #include "userparms.h"
 #include "adc.h"
 #include "pwm.h"
-#include "cmp.h"
 
 BUTTON_T buttonStartStop;
 BUTTON_T buttonSpeedHalfDouble;
@@ -173,12 +172,6 @@ void ButtonGroupInitialize(void)
  */
 void InitPeripherals(void)
 {        
-    uint16_t cmpReference = 0;
-    CMP_Initialize();
-    CMP1_ModuleEnable(true);
-    cmpReference = (uint16_t)(__builtin_mulss(Q15_OVER_CURRENT_THRESHOLD,2047)>>15);
-    cmpReference = cmpReference + 2048; 
-    CMP1_ReferenceSet(cmpReference);
     InitializeADCs();
     
     InitPWMGenerators();

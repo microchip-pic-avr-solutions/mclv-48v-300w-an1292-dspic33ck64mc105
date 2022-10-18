@@ -10,8 +10,8 @@
     pins
 
   Description:
-    Definitions in the file are for dsPIC33CK64MC105 on Motor Control 
-    Development board from Microchip
+    Definitions in the file are for dsPIC33CK64MC105 MC DIM plugged onto
+    Motor Control Development board from Microchip
  
 *******************************************************************************/
 /*******************************************************************************
@@ -158,20 +158,8 @@ void MapGPIOHWFunction(void)
     
     /* ANALOG SIGNALS */
 
-    // Configure Port pins for Motor Current Sensing
-    
-    //Ia Out
-    ANSELAbits.ANSELA0 = 1;
-    TRISAbits.TRISA0 = 1;   //Pin 8: OA1OUT/AN0/CMP1A/IBIAS0/RA0
-    
-    //Ib Out
-    ANSELBbits.ANSELB2 = 1;
-    TRISBbits.TRISB2 = 1;   //Pin 25: OA2OUT/AN1/AN7/CMP1D/RP34/INT0/RB2
-    
-    //Ibus Out
-    ANSELAbits.ANSELA4 = 1;
-    TRISAbits.TRISA4 = 1;   //Pin 12: OA3OUT/AN4/IBIAS3/RA4
-    
+    // Configure Port pins for Motor Current Sensing 
+
     
 #ifdef INTERNAL_OPAMP_CONFIG
     
@@ -182,6 +170,10 @@ void MapGPIOHWFunction(void)
     //Ia+
     ANSELAbits.ANSELA2 = 1;
     TRISAbits.TRISA2 = 1;   //Pin 10: OA1IN+/AN9/RA2
+	
+    //Ia Out
+    ANSELAbits.ANSELA0 = 1;
+    TRISAbits.TRISA0 = 0;   //Pin 8: OA1OUT/AN0/CMP1A/IBIAS0/RA0
     
     //Ib- 
     ANSELBbits.ANSELB3 = 1;
@@ -190,6 +182,10 @@ void MapGPIOHWFunction(void)
     //Ib+ 
     ANSELBbits.ANSELB4 = 1;
     TRISBbits.TRISB4 = 1;   //Pin 27: PGC2/OA2IN+/RP36/RB4
+	
+    //Ib Out
+    ANSELBbits.ANSELB2 = 1;
+    TRISBbits.TRISB2 = 0;   //Pin 25: OA2OUT/AN1/AN7/CMP1D/RP34/INT0/RB2
     
     //Ibus- 
     ANSELCbits.ANSELC1 = 1;
@@ -198,6 +194,10 @@ void MapGPIOHWFunction(void)
     //Ibus+ 
     ANSELCbits.ANSELC2 = 1;
     TRISCbits.TRISC2 = 1;   //Pin 16: OA3IN+/AN14/ISRC1/RP50/RC2
+	
+    //Ibus Out
+    ANSELAbits.ANSELA4 = 1;
+    TRISAbits.TRISA4 = 0;   //Pin 12: OA3OUT/AN4/IBIAS3/RA4
     
     //Op-Amp Configuration
     AMPCON1Hbits.NCHDIS2 = 0;    //Wide input range for Op Amp #2
@@ -210,7 +210,19 @@ void MapGPIOHWFunction(void)
     AMPCON1Lbits.AMPEN3 = 1;     //Enables Op Amp #3
     
     AMPCON1Lbits.AMPON = 1;      //Enables op amp modules if their respective AMPENx bits are also asserted
-     
+#else
+    
+    //Ia Out
+    ANSELAbits.ANSELA0 = 1;
+    TRISAbits.TRISA0 = 1;   //Pin 8: OA1OUT/AN0/CMP1A/IBIAS0/RA0
+    
+    //Ib Out
+    ANSELBbits.ANSELB2 = 1;
+    TRISBbits.TRISB2 = 1;   //Pin 25: OA2OUT/AN1/AN7/CMP1D/RP34/INT0/RB2
+    
+    //Ibus Out
+    ANSELAbits.ANSELA4 = 1;
+    TRISAbits.TRISA4 = 1;   //Pin 12: OA3OUT/AN4/IBIAS3/RA4
 #endif
     
     // Potentiometer #1 input - used as Speed Reference
@@ -251,8 +263,6 @@ void MapGPIOHWFunction(void)
     // SW2 : 
     TRISDbits.TRISD13 = 1;           // PIN:06 - ANN0/RP77/RD13
     
-    //Configuring RP72 as PCI9 input for FLTLAT_OC_OV
-	_PCI9R = 72;
 	/** Diagnostic Interface for MCLV48V-300W Board etc.
         Re-map UART Channels to the device pins connected to the following 
         PIM pins on the Motor Control Development Boards .

@@ -8,8 +8,8 @@
     This header file lists ADC Configuration related functions and definitions
 
   Description:
-    Definitions in the file are for dsPIC33CK64MC105 on Motor Control 
-    Development board from Microchip
+    Definitions in the file are for dsPIC33CK64MC105 MC DIM plugged onto
+	Motor Control Development board from Microchip
 
 *******************************************************************************/
 /*******************************************************************************
