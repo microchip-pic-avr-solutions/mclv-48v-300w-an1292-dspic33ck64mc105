@@ -98,7 +98,7 @@ void Estim(void)
             estimator.qDIalpha = -estimator.qDIlimitLS;
         }
         estimator.qVIndalpha = (int16_t) (__builtin_mulss(motorParm.qLsDt,
-                estimator.qDIalpha) >> 10);
+                estimator.qDIalpha) >> NORM_LSDTBASE_FILT_SCALE_SHIFT);
 
         estimator.qDIbeta = (ialphabeta.beta - estimator.qLastIbetaHS[index]);
         /* The current difference can exceed the maximum value per 8 ADC ISR cycle
@@ -113,7 +113,7 @@ void Estim(void)
             estimator.qDIbeta = -estimator.qDIlimitLS;
         }
         estimator.qVIndbeta = (int16_t) (__builtin_mulss(motorParm.qLsDt,
-                estimator.qDIbeta) >> 10);
+                estimator.qDIbeta) >> NORM_LSDTBASE_FILT_SCALE_SHIFT);
 
     } 
     else 
@@ -133,7 +133,7 @@ void Estim(void)
             estimator.qDIalpha = -estimator.qDIlimitHS;
         }
         estimator.qVIndalpha = (int16_t) (__builtin_mulss(motorParm.qLsDt,
-                estimator.qDIalpha) >> 7);
+                estimator.qDIalpha) >> NORM_LSDTBASE_SCALE_SHIFT);
 
         estimator.qDIbeta = (ialphabeta.beta -
                 estimator.qLastIbetaHS[(estimator.qDiCounter)]);
@@ -150,7 +150,7 @@ void Estim(void)
             estimator.qDIbeta = -estimator.qDIlimitHS;
         }
         estimator.qVIndbeta = (int16_t) (__builtin_mulss(motorParm.qLsDt,
-                estimator.qDIbeta) >> 7);
+                estimator.qDIbeta) >> NORM_LSDTBASE_SCALE_SHIFT);
     }
 
     /* Update  LastIalpha and LastIbeta */
@@ -164,7 +164,7 @@ void Estim(void)
 
     bemfAlphaBeta.alpha =  valphabeta.alpha -
                         (int16_t) (__builtin_mulss(motorParm.qRs, 
-                                  ialphabeta.alpha) >> 11) -
+                                  ialphabeta.alpha) >> NORM_RS_SCALE_SHIFT) -
                         estimator.qVIndalpha;
 
     /* The multiplication between the Rs and Ialpha was shifted by 14 instead
@@ -175,7 +175,7 @@ void Estim(void)
        BEMF = Ubeta - Rs Ibeta - Ls dIbeta/dt */
     bemfAlphaBeta.beta =   valphabeta.beta -
                         (int16_t) (__builtin_mulss(motorParm.qRs,
-                                 ialphabeta.beta) >> 11) -
+                                 ialphabeta.beta) >> NORM_RS_SCALE_SHIFT) -
                         estimator.qVIndbeta;
 
     /* The multiplication between the Rs and Ibeta was shifted by 14 instead of 15
@@ -235,8 +235,8 @@ void Estim(void)
        initial value of InvKfi was shifted by 2 after normalizing -
        assuring that extended range of the variable is possible in the
        lookup table the initial value of InvKfi is defined in userparms.h */
-    estimator.qOmegaMr = estimator.qOmegaMr << 1;
-    
+    estimator.qOmegaMr = estimator.qOmegaMr << NORM_INVKFIBASE_SCALE;
+
     /* the integral of the angle is the estimated angle */
     estimator.qRhoStateVar += __builtin_mulss(estimator.qOmegaMr,
                                 estimator.qDeltaT);

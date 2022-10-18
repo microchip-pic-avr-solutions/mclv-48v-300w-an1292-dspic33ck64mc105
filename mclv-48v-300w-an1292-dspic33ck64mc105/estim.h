@@ -128,7 +128,7 @@ typedef struct
     /* InvKfi constant value ( InvKfi = Omega/BEMF ) */
     int16_t qInvKFi;
     /* InvKfi constant - base speed (nominal) value */
-    int16_t qInvKFiBase;            
+    int16_t qInvKFiBase;
 } MOTOR_ESTIM_PARM_T;
 
 extern ESTIM_PARM_T estimator;
