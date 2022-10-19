@@ -37,13 +37,15 @@ pipeline {
         UNAPPROVED_KEYWORDS_OVERRIDE_LIST="NONE"
         
         /*
+        
+        /*
             GitHub Page Stage Information
             List of GitHub Page Options:
             ----------------------------
             1. GITHUB_PAGES_NONE         ( Branch: None, index file path: None )
             2. GITHUB_PAGES_MASTER_ROOT  ( Branch: Master, index file path: /root )
-            3. GITHUB_PAGES_MASTER_DOCS  ( Branch: Develop, index file path: /Docs ) 
-            4. GITHUB_PAGES_DEVELOP_ROOT ( Branch: Master, index file path: /root )
+            3. GITHUB_PAGES_MASTER_DOCS  ( Branch: Master, index file path: /Docs ) 
+            4. GITHUB_PAGES_DEVELOP_ROOT ( Branch: Develop, index file path: /root )
             5. GITHUB_PAGES_DEVELOP_DOCS ( Branch: Develop, index file path: /Docs )
         */
         GITHUB_PAGES = 'GITHUB_PAGES_NONE'    
@@ -79,9 +81,9 @@ pipeline {
         
         stage('Build') {
             steps {
-                script {
-					sh("npm install -g xml2js")
-					sh("npm link xml2js")
+                script {  
+                    sh("npm install -g xml2js")
+		    sh("npm link xml2js")				
                     mplabxProjectBuild(
                         sourceFilePath: "${env.MPLABX_PROJECT_SOURCE}"
                     )

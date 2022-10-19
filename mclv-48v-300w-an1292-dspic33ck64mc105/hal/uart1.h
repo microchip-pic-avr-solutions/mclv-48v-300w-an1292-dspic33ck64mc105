@@ -5,8 +5,8 @@
  * This header file lists interface functions - to configure and enable UART1 
  * module and its features
  * 
- * Definitions in the file are for dsPIC33CK64MC105 on Motor Control 
- * Development board from Microchip
+ * Definitions in the file are for dsPIC33CK64MC105 MC DIM plugged onto 
+ * Motor Control Development board from Microchip.
  * 
  * Component: HAL - UART1
  * 
