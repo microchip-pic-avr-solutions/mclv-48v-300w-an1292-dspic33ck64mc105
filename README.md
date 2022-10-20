@@ -16,7 +16,7 @@ For details about PLL estimator refer to Microchip application note [AN1292](htt
 To clone or download this application firmware on GitHub, 
 - Navigate to the [main page of this repository](https://github.com/microchip-pic-avr-solutions/mclv-48v-300w-an1292-dsPIC33CK64MC105) and 
 - On the tab **<> Code**, above the list of files in the right-hand corner, click Code, then from the menu, click **Download ZIP** or copy the repository URL to **clone.**
-> **Note**
+> **Note:**</br>
 >In this document, hereinafter this firmware package is referred as **firmware.**
 ### 2.2 Software Tools Used for Testing the firmware
 
@@ -28,7 +28,7 @@ To clone or download this application firmware on GitHub,
 >The software used for testing the firmware prior to release is listed above. It is recommended to use the version listed above or later versions for building the firmware.
 ### 2.3 Hardware Tools Required for the Demonstration
 - MCLV-48V-300W Inverter Board (EV18H47A)
-- dsPIC33CK64MC105 Motor Control DIM (EV03J37A)
+- dsPIC33CK64MC105 Motor Control Dual In-line Module (EV03J37A)
 - 24V Power Supply [(AC002013)](https://www.microchipdirect.com/dev-tools/AC002013)
 - 24V 3-Phase Brushless DC Motor [(AC300020)](https://www.microchip.com/en-us/development-tool/AC300020)
 
